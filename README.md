@@ -1,5 +1,8 @@
 # OmniAuth MPASSid (SAML 2.0)
 
+[![Build Status](https://travis-ci.com/mainio/omniauth-mpassid.svg?branch=master)](https://travis-ci.com/mainio/omniauth-mpassid)
+[![codecov](https://codecov.io/gh/mainio/omniauth-mpassid/branch/master/graph/badge.svg)](https://codecov.io/gh/mainio/omniauth-mpassid)
+
 This is an unofficial OmniAuth strategy for authenticating with the MPASSid
 identification service used by comprehensive schools and secondary education
 facilities in Finland. This gem is mostly a configuration wrapper around
