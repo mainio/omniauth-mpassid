@@ -40,10 +40,6 @@ module OmniAuth
 
           doc.to_s
         end
-
-        def self.template_filepath(filename)
-          File.expand_path(File.join('templates', filename), __dir__)
-        end
       end
     end
   end
