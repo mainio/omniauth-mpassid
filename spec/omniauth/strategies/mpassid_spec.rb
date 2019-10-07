@@ -177,6 +177,55 @@ describe OmniAuth::Strategies::MPASSid, type: :strategy do
         expect(acs).to eq('https://www.service.fi/auth/mpassid/callback')
       end
     end
+
+    context 'with lang parameter' do
+      shared_examples '' do
+        specify { expect(true).to eq true }
+      end
+
+      shared_examples 'lang added' do |request_locale, expected_locale|
+        subject { get "/auth/mpassid?lang=#{request_locale}" }
+
+        it do
+          is_expected.to be_redirect
+
+          location = URI.parse(last_response.location)
+          expect(location.query).to match(/&lang=#{expected_locale}$/)
+        end
+      end
+
+      context 'when set to fi' do
+        it_behaves_like 'lang added', 'fi', 'fi'
+      end
+
+      context 'when set to fi-FI' do
+        it_behaves_like 'lang added', 'fi-FI', 'fi'
+      end
+
+      context 'when set to sv' do
+        it_behaves_like 'lang added', 'sv', 'sv'
+      end
+
+      context 'when set to sv_SE' do
+        it_behaves_like 'lang added', 'sv_SE', 'sv'
+      end
+
+      context 'when set to en_GB' do
+        it_behaves_like 'lang added', 'en_GB', 'fi'
+      end
+
+      context 'when set to et' do
+        it_behaves_like 'lang added', 'et', 'fi'
+      end
+
+      context 'when set to de-DE' do
+        it_behaves_like 'lang added', 'de-DE', 'fi'
+      end
+
+      context 'when set to nb_NO' do
+        it_behaves_like 'lang added', 'nb_NO', 'fi'
+      end
+    end
   end
 
   describe 'POST /auth/mpassid/callback' do

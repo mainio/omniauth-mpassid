@@ -10,6 +10,27 @@ module OmniAuth
       # :test - MPASSid test environment
       option :mode, :production
 
+      # Defines the lang parameters to check from the request phase request
+      # parameters. A valid language will be added to the IdP sign in redirect
+      # URL as the last parameter (with the name `lang` as expected by
+      # MPASSid).
+      #
+      # MPASSid generally accepts `fi` or `sv` in this parameter but it can
+      # depend on the underlying service. The language can be parsed from the
+      # following kind of strings:
+      # - fi
+      # - sv-SE
+      # - fi_FI
+      #
+      # In case a valid language cannot be parsed from the parameter, the lang
+      # parameter will default to `:idp_sso_target_url_default_lang`.
+      option :idp_sso_target_url_lang_params, %w[locale language lang]
+
+      # This is the default language to be passed to IdP sign in redirect URL as
+      # defined above. In case a valid language is not found from the request
+      # parameters, this will be used instead.
+      option :idp_sso_target_url_default_lang, 'fi'
+
       # The request attributes for MPASSid
       option :request_attributes, [
         # The unique identifier of the authenticated user. Currently recommended
@@ -236,6 +257,20 @@ module OmniAuth
         )
       end
 
+      # Override the request phase to be able to pass the lang parameter to
+      # the redirect URL. Note that this needs to be the last parameter to
+      # be passed to the redirect URL.
+      def request_phase
+        authn_request = OneLogin::RubySaml::Authrequest.new
+        lang = lang_for_authn_request
+
+        with_settings do |settings|
+          url = authn_request.create(settings, additional_params_for_authn_request)
+          url += "&lang=#{CGI.escape(lang)}" unless lang.nil?
+          redirect(url)
+        end
+      end
+
       # This method can be used externally to fetch information about the
       # response, e.g. in case of failures.
       def response_object
@@ -308,6 +343,25 @@ module OmniAuth
             attrs[target] = value
           end
         end
+      end
+
+      def lang_for_authn_request
+        if options.idp_sso_target_url_lang_params.is_a?(Array)
+          options.idp_sso_target_url_lang_params.each do |param|
+            next unless request.params.key?(param.to_s)
+
+            lang = parse_language_value(request.params[param.to_s])
+            return lang unless lang.nil?
+          end
+        end
+
+        options.idp_sso_target_url_default_lang
+      end
+
+      def parse_language_value(string)
+        language = string.sub('_', '-').split('-').first
+
+        language if language =~ /^(fi|sv)$/
       end
     end
   end
