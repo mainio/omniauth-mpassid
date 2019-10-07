@@ -251,6 +251,13 @@ module OmniAuth
         end
       end
 
+      # Override the callback URL so that it always matches the one expected by
+      # MPASSid. No additional query string parameters can be included in the
+      # string.
+      def callback_url
+        full_host + script_name + callback_path
+      end
+
     private
 
       def idp_metadata_url

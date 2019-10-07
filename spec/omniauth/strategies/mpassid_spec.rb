@@ -160,6 +160,23 @@ describe OmniAuth::Strategies::MPASSid, type: :strategy do
       issuer = request.root.elements['saml:Issuer']
       expect(issuer.text).to eq('https://www.service.fi/auth/mpassid/metadata')
     end
+
+    context 'with extra parameters' do
+      subject { get '/auth/mpassid?extra=param' }
+
+      it 'should not add any extra parameters to the redirect assertion consumer service URL' do
+        is_expected.to be_redirect
+
+        location = URI.parse(last_response.location)
+        query = Rack::Utils.parse_query location.query
+
+        xml = OmniAuth::MPASSid::Test::Utility.inflate_xml(query['SAMLRequest'])
+        request = REXML::Document.new(xml)
+        acs = request.root.attributes['AssertionConsumerServiceURL']
+
+        expect(acs).to eq('https://www.service.fi/auth/mpassid/callback')
+      end
+    end
   end
 
   describe 'POST /auth/mpassid/callback' do
