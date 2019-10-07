@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    omniauth-mpassid (0.1.0)
+    omniauth-mpassid (0.2.0)
       omniauth-saml (~> 1.10.1)
 
 GEM
