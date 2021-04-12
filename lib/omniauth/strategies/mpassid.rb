@@ -23,13 +23,13 @@ module OmniAuth
       # - fi_FI
       #
       # In case a valid language cannot be parsed from the parameter, the lang
-      # parameter will default to `:idp_sso_target_url_default_lang`.
-      option :idp_sso_target_url_lang_params, %w[locale language lang]
+      # parameter will default to `:idp_sso_service_url_default_lang`.
+      option :idp_sso_service_url_lang_params, %w[locale language lang]
 
       # This is the default language to be passed to IdP sign in redirect URL as
       # defined above. In case a valid language is not found from the request
       # parameters, this will be used instead.
-      option :idp_sso_target_url_default_lang, 'fi'
+      option :idp_sso_service_url_default_lang, 'fi'
 
       # The request attributes for MPASSid
       option :request_attributes, [
@@ -346,8 +346,8 @@ module OmniAuth
       end
 
       def lang_for_authn_request
-        if options.idp_sso_target_url_lang_params.is_a?(Array)
-          options.idp_sso_target_url_lang_params.each do |param|
+        if options.idp_sso_service_url_lang_params.is_a?(Array)
+          options.idp_sso_service_url_lang_params.each do |param|
             next unless request.params.key?(param.to_s)
 
             lang = parse_language_value(request.params[param.to_s])
@@ -355,7 +355,7 @@ module OmniAuth
           end
         end
 
-        options.idp_sso_target_url_default_lang
+        options.idp_sso_service_url_default_lang
       end
 
       def parse_language_value(string)
