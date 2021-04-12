@@ -71,7 +71,7 @@ describe OmniAuth::Strategies::MPASSid, type: :strategy do
       expect(instance.options[:idp_entity_id]).to eq(
         'https://mpass-proxy-test.csc.fi/idp/shibboleth'
       )
-      expect(instance.options[:idp_sso_target_url]).to eq(
+      expect(instance.options[:idp_sso_service_url]).to eq(
         'https://mpass-proxy-test.csc.fi/idp/profile/SAML2/Redirect/SSO'
       )
 
