@@ -1,0 +1,26 @@
+name: "[CI] Omniauth MpassID"
+on: [push, pull_request]
+
+env:
+  CI: "true"
+  CODECOV: "true"
+
+jobs:
+  main:
+    name: Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: rokroskar/workflow-run-cleanup-action@v0.3.0
+        if: "github.ref != 'refs/heads/develop'"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/checkout@v2.0.0
+        with:
+          fetch-depth: 1
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: RSpec
+        run: bundle exec rspec
+      - uses: codecov/codecov-action@v1

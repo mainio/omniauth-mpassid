@@ -1,6 +1,6 @@
 # OmniAuth MPASSid (SAML 2.0)
 
-[![Build Status](https://travis-ci.com/mainio/omniauth-mpassid.svg?branch=master)](https://travis-ci.com/mainio/omniauth-mpassid)
+[![Build Status](https://github.com/mainio/omniauth-mpassid/actions/workflows/ci_omniauth_mpassid.yml/badge.svg)](https://github.com/mainio/omniauth-mpassid/actions)
 [![codecov](https://codecov.io/gh/mainio/omniauth-mpassid/branch/master/graph/badge.svg)](https://codecov.io/gh/mainio/omniauth-mpassid)
 
 This is an unofficial OmniAuth strategy for authenticating with the MPASSid
