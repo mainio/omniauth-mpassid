@@ -35,7 +35,7 @@ describe OmniAuth::Strategies::MPASSid, type: :strategy do
   end
 
   describe '#initialize' do
-    subject { get '/auth/mpassid/metadata' }
+    subject { post '/auth/mpassid/metadata' }
 
     it 'should apply the local options and the IdP metadata options' do
       is_expected.to be_successful
@@ -122,8 +122,8 @@ describe OmniAuth::Strategies::MPASSid, type: :strategy do
     end
   end
 
-  describe 'GET /auth/mpassid' do
-    subject { get '/auth/mpassid' }
+  describe 'POST /auth/mpassid' do
+    subject { post '/auth/mpassid' }
 
     it 'should not sign the request' do
       is_expected.to be_redirect
@@ -162,7 +162,7 @@ describe OmniAuth::Strategies::MPASSid, type: :strategy do
     end
 
     context 'with extra parameters' do
-      subject { get '/auth/mpassid?extra=param' }
+      subject { post '/auth/mpassid?extra=param' }
 
       it 'should not add any extra parameters to the redirect assertion consumer service URL' do
         is_expected.to be_redirect
@@ -184,7 +184,7 @@ describe OmniAuth::Strategies::MPASSid, type: :strategy do
       end
 
       shared_examples 'lang added' do |request_locale, expected_locale|
-        subject { get "/auth/mpassid?lang=#{request_locale}" }
+        subject { post "/auth/mpassid?lang=#{request_locale}" }
 
         it do
           is_expected.to be_redirect
@@ -391,8 +391,8 @@ describe OmniAuth::Strategies::MPASSid, type: :strategy do
     end
   end
 
-  describe 'GET /auth/mpassid/metadata' do
-    subject { get '/auth/mpassid/metadata' }
+  describe 'POST /auth/mpassid/metadata' do
+    subject { post '/auth/mpassid/metadata' }
 
     let(:response_xml) { Nokogiri::XML(last_response.body) }
     let(:request_attribute_nodes) do
