@@ -39,13 +39,15 @@ module OmniAuth
         # (single value)
         {
           name: 'urn:mpass.id:uid',
-          name_format: 'urn:oasis:names:tc:SAML:2.0:attrname-format:uri'
+          name_format: 'urn:oasis:names:tc:SAML:2.0:attrname-format:uri',
+          friendly_name: 'mpassUsername'
         },
         # Funet EDU person learner ID
         # (single value)
         {
           name: 'urn:oid:1.3.6.1.4.1.16161.1.1.27',
-          name_format: 'urn:oasis:names:tc:SAML:2.0:attrname-format:uri'
+          name_format: 'urn:oasis:names:tc:SAML:2.0:attrname-format:uri',
+          friendly_name: 'learnerId'
         },
         # The first/given name of the user.
         # (single value)
@@ -68,26 +70,6 @@ module OmniAuth
           name_format: 'urn:oasis:names:tc:SAML:2.0:attrname-format:uri',
           friendly_name: 'sn'
         },
-        # The municipality code of the authenticated user. See
-        # http://tilastokeskus.fi/meta/luokitukset/kunta/001-2017/index.html
-        # for mappings in Finland.
-        # (multi value)
-        {
-          name: 'urn:mpass.id:municipalityCode',
-          name_format: 'urn:oasis:names:tc:SAML:2.0:attrname-format:uri',
-          friendly_name: 'municipalityCode'
-        },
-        # The human-readable name of the municipality of the authenticated user.
-        # (multi value)
-        {
-          name: 'urn:mpass.id:municipality',
-          name_format: 'urn:oasis:names:tc:SAML:2.0:attrname-format:uri'
-        },
-        {
-          name: 'urn:educloudalliance.org:municipality',
-          name_format: 'urn:oasis:names:tc:SAML:2.0:attrname-format:uri',
-          friendly_name: 'ecaMunicipality'
-        },
         # The school code of the authenticated user. See
         # https://virkailija.opintopolku.fi/koodisto-service/rest/json/oppilaitosnumero/koodi
         # (JSON format)
@@ -99,7 +81,8 @@ module OmniAuth
         # (multi value)
         {
           name: 'urn:mpass.id:schoolCode',
-          name_format: 'urn:oasis:names:tc:SAML:2.0:attrname-format:uri'
+          name_format: 'urn:oasis:names:tc:SAML:2.0:attrname-format:uri',
+          friendly_name: 'mpassSchoolCode'
         },
         # The human-readable name of the school of the authenticated user.
         # (multi value)
@@ -108,12 +91,21 @@ module OmniAuth
           name_format: 'urn:oasis:names:tc:SAML:2.0:attrname-format:uri',
           friendly_name: 'school'
         },
+        # Combination of the school code and official name of the educational
+        # institution separated with semicolon.
+        # For instance: 00000;Tuntematon
+        {
+          name: 'urn:mpass.id:schoolInfo',
+          name_format: 'urn:oasis:names:tc:SAML:2.0:attrname-format:uri',
+          friendly_name: 'mpassSchoolInfo'
+        },
         # The class/group-information of the authenticated user.
         # For instance: 8A or 3B.
         # (multi value)
         {
           name: 'urn:mpass.id:class',
-          name_format: 'urn:oasis:names:tc:SAML:2.0:attrname-format:uri'
+          name_format: 'urn:oasis:names:tc:SAML:2.0:attrname-format:uri',
+          friendly_name: 'mpassClass'
         },
         {
           name: 'urn:educloudalliance.org:group',
@@ -125,7 +117,8 @@ module OmniAuth
         # (multi value)
         {
           name: 'urn:mpass.id:classLevel',
-          name_format: 'urn:oasis:names:tc:SAML:2.0:attrname-format:uri'
+          name_format: 'urn:oasis:names:tc:SAML:2.0:attrname-format:uri',
+          friendly_name: 'mpassClassLevel'
         },
         # The role name of the user.
         # For instance Oppilas.
@@ -136,18 +129,43 @@ module OmniAuth
           friendly_name: 'ecaRole'
         },
         # The role of the user in four parts, divided with a semicolon (;)
-        # character. First municipality, followed by school code, group and role
-        # in the group.
-        # For instance Helsinki;32132;9A;Oppilas.
+        # character. First educational provider's organization OID, followed by
+        # school code, group and role in the group.
+        # For instance 1.2.246.562.10.12345678907;99900;7B;Oppilas.
         # (multi value)
+        #
+        # The educational providers' organization OIDs can be found from:
+        # https://github.com/Opetushallitus/aitu/blob/master/ttk-db/resources/db/migration/V11_2__koulutustoimijat.sql
         {
           name: 'urn:mpass.id:role',
-          name_format: 'urn:oasis:names:tc:SAML:2.0:attrname-format:uri'
-        },
-        {
-          name: 'urn:educloudalliance.org:structuredRole',
           name_format: 'urn:oasis:names:tc:SAML:2.0:attrname-format:uri',
-          friendly_name: 'ecaStructuredRole'
+          friendly_name: 'mpassRole'
+        },
+        # The educational provider's permanent organization OID.
+        # (multi value)
+        #
+        # The educational providers' organization OIDs can be found from:
+        # https://github.com/Opetushallitus/aitu/blob/master/ttk-db/resources/db/migration/V11_2__koulutustoimijat.sql
+        {
+          name: 'urn:mpass.id:educationProviderId',
+          name_format: 'urn:oasis:names:tc:SAML:2.0:attrname-format:uri',
+          friendly_name: 'mpassEducationProviderOid'
+        },
+        # The educational provider's human-readable name.
+        # (multi value)
+        {
+          name: 'urn:mpass.id:educationProvider',
+          name_format: 'urn:oasis:names:tc:SAML:2.0:attrname-format:uri',
+          friendly_name: 'mpassEducationProviderName'
+        },
+        # Combination of the education provider's organisation-OID and official
+        # name. Separated by semicolon.
+        # For instance: 1.2.246.562.10.494695390410;Virallinen nimi
+        # (multi value)
+        {
+          name: 'urn:mpass.id:educationProviderInfo',
+          name_format: 'urn:oasis:names:tc:SAML:2.0:attrname-format:uri',
+          friendly_name: 'mpassEducationProviderInfo'
         }
       ]
 
@@ -158,8 +176,8 @@ module OmniAuth
         # Given name or all first names (in case given name is not found)
         first_name: ['urn:oid:2.5.4.42', 'http://eidas.europa.eu/attributes/naturalperson/CurrentGivenName'],
         last_name: ['urn:oid:2.5.4.4'],
-        # The municipality of the person (literal format in Finnish)
-        location: ['urn:mpass.id:municipality', 'urn:educloudalliance.org:municipality']
+        # The education provider (e.g. municipality) of the person (literal format in Finnish)
+        location: ['urn:mpass.id:educationProvider']
       )
 
       info do
@@ -197,14 +215,14 @@ module OmniAuth
       option(
         :saml_attributes_map,
         given_name: ['urn:oid:2.5.4.42'],
-        first_names: ['http://eidas.europa.eu/attributes/naturalperson/CurrentGivenName'],
+        first_names: ['urn:oid:2.5.4.42'],
         last_name: ['urn:oid:2.5.4.4'],
-        municipality_code: {
-          name: ['urn:mpass.id:municipalityCode'],
+        provider_id: {
+          name: ['urn:mpass.id:educationProviderId'],
           type: :multi
         },
-        municipality_name: {
-          name: ['urn:mpass.id:municipality', 'urn:educloudalliance.org:municipality'],
+        provider_name: {
+          name: ['urn:mpass.id:educationProvider'],
           type: :multi
         },
         school_code: {
@@ -231,7 +249,8 @@ module OmniAuth
           name: ['urn:educloudalliance.org:role'],
           type: :multi
         },
-        # Extra (undocumented)
+        # Extra
+        # Unique learner ID
         funet_person_learner_id: ['urn:oid:1.3.6.1.4.1.16161.1.1.27']
       )
 
