@@ -11,11 +11,17 @@ end
 describe OmniAuth::Strategies::MPASSid, type: :strategy do
   include OmniAuth::Test::StrategyTestCase
 
+  let(:certgen) { OmniAuth::MPASSid::Test::CertificateGenerator.new }
+  let(:private_key) { certgen.private_key }
+  let(:certificate) { certgen.certificate }
+
   let(:auth_hash) { last_request.env['omniauth.auth'] }
   let(:saml_options) do
     {
       mode: mode,
-      sp_entity_id: sp_entity_id
+      sp_entity_id: sp_entity_id,
+      certificate: certificate.to_pem,
+      private_key: private_key.to_pem
     }
   end
   let(:mode) { :test }
