@@ -284,10 +284,7 @@ module OmniAuth
       # the redirect URL. Note that this needs to be the last parameter to
       # be passed to the redirect URL.
       def request_phase
-        if mpassid_thread.status.present?
-          Thread.kill(mpassid_thread)
-          @options = OmniAuth::Strategy::Options.new(mpassid_options.merge(options))
-        end
+        mpassid_thread.join
         authn_request = OneLogin::RubySaml::Authrequest.new
         lang = lang_for_authn_request
 

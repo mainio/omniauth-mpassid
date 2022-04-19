@@ -27,6 +27,9 @@ describe OmniAuth::Strategies::MPASSid, type: :strategy do
   let(:mode) { :test }
   let(:sp_entity_id) { 'https://www.service.fi/auth/mpassid/metadata' }
   let(:strategy) { [OmniAuth::Strategies::MPASSid, saml_options] }
+  let(:thread) { double(
+    join: nil
+  )}
 
   before do
     # Stub the metadata to return the locally stored metadata for easier
@@ -38,6 +41,7 @@ describe OmniAuth::Strategies::MPASSid, type: :strategy do
     ).to_return(status: 200, body: File.new(
       support_filepath('idp_metadata.xml')
     ), headers: {})
+    allow(Thread).to receive(:new).and_yield.and_return(thread)
   end
 
   describe '#initialize' do
