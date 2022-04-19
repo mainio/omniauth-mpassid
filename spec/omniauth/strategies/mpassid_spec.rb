@@ -28,7 +28,8 @@ describe OmniAuth::Strategies::MPASSid, type: :strategy do
   let(:sp_entity_id) { 'https://www.service.fi/auth/mpassid/metadata' }
   let(:strategy) { [OmniAuth::Strategies::MPASSid, saml_options] }
   let(:thread) { double(
-    join: nil
+    join: nil,
+    alive?: false
   )}
 
   before do
