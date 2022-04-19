@@ -264,7 +264,8 @@ module OmniAuth
       # Add the SAML attributes to the extra hash for easier access.
       extra { {saml_attributes: saml_attributes} }
 
-      attr_accessor :options, :mpassid_thread
+      attr_accessor :options
+      attr_reader :mpassid_thread
 
       def initialize(app, *args, &block)
         super
