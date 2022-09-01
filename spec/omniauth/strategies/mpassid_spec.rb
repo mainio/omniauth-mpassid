@@ -15,11 +15,15 @@ describe OmniAuth::Strategies::MPASSid, type: :strategy do
   let(:saml_options) do
     {
       mode: mode,
-      sp_entity_id: sp_entity_id
+      sp_entity_id: sp_entity_id,
+      certificate_file: certificate_file,
+      private_key_file: private_key_file
     }
   end
   let(:mode) { :test }
   let(:sp_entity_id) { 'https://www.service.fi/auth/mpassid/metadata' }
+  let(:certificate_file) { support_filepath('sp_cert.crt') }
+  let(:private_key_file) { support_filepath('sp_cert.key') }
   let(:strategy) { [OmniAuth::Strategies::MPASSid, saml_options] }
 
   before do
@@ -48,7 +52,7 @@ describe OmniAuth::Strategies::MPASSid, type: :strategy do
         'https://www.service.fi/auth/mpassid/metadata'
       )
       expect(instance.options[:security]).to include(
-        'authn_requests_signed' => false,
+        'authn_requests_signed' => true,
         'logout_requests_signed' => false,
         'logout_responses_signed' => false,
         'want_assertions_signed' => false,
@@ -125,14 +129,34 @@ describe OmniAuth::Strategies::MPASSid, type: :strategy do
   describe 'GET /auth/mpassid' do
     subject { get '/auth/mpassid' }
 
-    it 'should not sign the request' do
+    it 'should sign the request' do
       is_expected.to be_redirect
 
       location = URI.parse(last_response.location)
       query = Rack::Utils.parse_query location.query
       expect(query).to have_key('SAMLRequest')
-      expect(query).not_to have_key('Signature')
-      expect(query).not_to have_key('SigAlg')
+      expect(query).to have_key('Signature')
+      expect(query).to have_key('SigAlg')
+    end
+
+    it 'should create a valid SAML authn request signature' do
+      is_expected.to be_redirect
+
+      location = URI.parse(last_response.location)
+      query = Rack::Utils.parse_query location.query
+
+      algorithm = query['SigAlg']
+      expect(algorithm).to eq('http://www.w3.org/2001/04/xmldsig-more#rsa-sha256')
+
+      url_string = OneLogin::RubySaml::Utils.build_query(
+        type: 'SAMLRequest',
+        data: query['SAMLRequest'],
+        sig_alg: algorithm
+      )
+      sign_algorithm = XMLSecurity::BaseDocument.new.algorithm(algorithm)
+      private_key = OneLogin::RubySaml::Utils.format_private_key(File.read(private_key_file))
+      signature = OpenSSL::PKey::RSA.new(private_key).sign(sign_algorithm.new, url_string)
+      expect(Base64.decode64(query['Signature'])).to eq(signature)
     end
 
     it 'should create a valid SAML authn request' do
@@ -159,6 +183,21 @@ describe OmniAuth::Strategies::MPASSid, type: :strategy do
 
       issuer = request.root.elements['saml:Issuer']
       expect(issuer.text).to eq('https://www.service.fi/auth/mpassid/metadata')
+    end
+
+    context 'without certificate' do
+      let(:certificate_file) { nil }
+      let(:private_key_file) { nil }
+
+      it 'should not sign the request' do
+        is_expected.to be_redirect
+
+        location = URI.parse(last_response.location)
+        query = Rack::Utils.parse_query location.query
+        expect(query).to have_key('SAMLRequest')
+        expect(query).not_to have_key('Signature')
+        expect(query).not_to have_key('SigAlg')
+      end
     end
 
     context 'with extra parameters' do
