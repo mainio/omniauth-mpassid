@@ -7,7 +7,7 @@ require 'omniauth-mpassid/version'
 Gem::Specification.new do |spec|
   spec.name = 'omniauth-mpassid'
   spec.version = OmniAuth::MPASSid::VERSION
-  spec.required_ruby_version = ">= 2.5"
+  spec.required_ruby_version = '>= 2.5'
   spec.authors = ['Antti Hukkanen']
   spec.email = ['antti.hukkanen@mainiotech.fi']
 
@@ -18,7 +18,6 @@ Gem::Specification.new do |spec|
   spec.metadata = {
     'rubygems_mfa_required' => 'true'
   }
-  spec.required_ruby_version = '>= 2.6'
 
   spec.files = Dir[
     '{lib}/**/*',
