@@ -281,6 +281,7 @@ module OmniAuth
         @options = OmniAuth::Strategy::Options.new(
           mpassid_options.merge(options)
         )
+        options[:security][:authn_requests_signed] = false unless options[:certificate] && options[:private_key]
       end
 
       # Override the request phase to be able to pass the lang parameter to
@@ -362,7 +363,6 @@ module OmniAuth
         settings[:security] = security_defaults.merge(
           options.security_settings.to_h.transform_keys(&:to_sym)
         )
-        settings[:security][:authn_requests_signed] = false unless certificate && private_key
 
         settings
       end
