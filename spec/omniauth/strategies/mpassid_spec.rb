@@ -261,7 +261,7 @@ describe OmniAuth::Strategies::MPASSid, type: :strategy do
         )
 
         raw_xml_file = support_filepath("#{xml}.xml")
-        xml_signed = begin
+        xml_signed =
           if custom_saml_attributes.empty?
             OmniAuth::MPASSid::Test::Utility.signed_xml(
               raw_xml_file,
@@ -269,7 +269,7 @@ describe OmniAuth::Strategies::MPASSid, type: :strategy do
               sign_private_key: sign_private_key
             )
           else
-            xml_io = IO.read(raw_xml_file)
+            xml_io = File.read(raw_xml_file)
             doc = Nokogiri::XML::Document.parse(xml_io)
             statements_node = doc.root.at_xpath(
               '//saml2:Assertion//saml2:AttributeStatement',
@@ -311,7 +311,6 @@ describe OmniAuth::Strategies::MPASSid, type: :strategy do
               sign_private_key: sign_private_key
             )
           end
-        end
 
         saml_response = Base64.encode64(xml_signed)
 

@@ -200,7 +200,7 @@ module OmniAuth
           [key, attribute]
         end
 
-        Hash[found_attributes]
+        found_attributes.to_h
       end
 
       option(
@@ -357,7 +357,7 @@ module OmniAuth
 
             value = definition[:name].map do |key|
               @attributes.public_send(definition[:type], key)
-            end.reject(&:nil?).first
+            end.compact.first
 
             attrs[target] = value
           end

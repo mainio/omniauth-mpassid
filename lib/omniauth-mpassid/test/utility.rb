@@ -10,7 +10,7 @@ module OmniAuth
         end
 
         def self.signed_xml(raw_xml_file, opts)
-          raw_xml = IO.read(raw_xml_file)
+          raw_xml = File.read(raw_xml_file)
           signed_xml_from_string(raw_xml, opts)
         end
 

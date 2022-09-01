@@ -14,6 +14,10 @@ Gem::Specification.new do |spec|
   spec.description = 'MPASSid identification service integration for OmniAuth.'
   spec.homepage = 'https://github.com/mainio/omniauth-mpassid'
   spec.license = 'MIT'
+  spec.metadata = {
+    'rubygems_mfa_required' => 'true'
+  }
+  spec.required_ruby_version = '>= 2.6'
 
   spec.files = Dir[
     '{lib}/**/*',
