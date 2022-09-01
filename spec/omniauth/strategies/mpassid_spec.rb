@@ -25,6 +25,12 @@ describe OmniAuth::Strategies::MPASSid, type: :strategy do
   let(:certificate_file) { support_filepath('sp_cert.crt') }
   let(:private_key_file) { support_filepath('sp_cert.key') }
   let(:strategy) { [OmniAuth::Strategies::MPASSid, saml_options] }
+  let(:thread) do
+    double(
+      join: nil,
+      alive?: false
+    )
+  end
 
   before do
     # Stub the metadata to return the locally stored metadata for easier
@@ -36,6 +42,7 @@ describe OmniAuth::Strategies::MPASSid, type: :strategy do
     ).to_return(status: 200, body: File.new(
       support_filepath('idp_metadata.xml')
     ), headers: {})
+    allow(Thread).to receive(:new).and_yield.and_return(thread)
   end
 
   describe '#initialize' do

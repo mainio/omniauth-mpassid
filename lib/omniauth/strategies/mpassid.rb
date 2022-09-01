@@ -271,6 +271,9 @@ module OmniAuth
       # Add the SAML attributes to the extra hash for easier access.
       extra { {saml_attributes: saml_attributes} }
 
+      attr_accessor :options
+      attr_reader :mpassid_thread
+
       def initialize(app, *args, &block)
         super
 
@@ -278,15 +281,18 @@ module OmniAuth
         # fetched from the metadata. The options array is the one that gets
         # priority in case it overrides some of the metadata or locally defined
         # option values.
-        @options = OmniAuth::Strategy::Options.new(
-          mpassid_options.merge(options)
-        )
+        @mpassid_thread = Thread.new do
+          @options = OmniAuth::Strategy::Options.new(
+            mpassid_options.merge(options)
+          )
+        end
       end
 
       # Override the request phase to be able to pass the lang parameter to
       # the redirect URL. Note that this needs to be the last parameter to
       # be passed to the redirect URL.
       def request_phase
+        mpassid_thread.join if mpassid_thread.alive?
         authn_request = OneLogin::RubySaml::Authrequest.new
         lang = lang_for_authn_request
 
