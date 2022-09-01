@@ -10,6 +10,12 @@ module OmniAuth
       # :test - MPASSid test environment
       option :mode, :production
 
+      # The certificate file to define the certificate.
+      option :certificate_file, nil
+
+      # The private key file to define the private key.
+      option :private_key_file, nil
+
       # Defines the lang parameters to check from the request phase request
       # parameters. A valid language will be added to the IdP sign in redirect
       # URL as the last parameter (with the name `lang` as expected by
@@ -205,6 +211,7 @@ module OmniAuth
 
       option(
         :security_settings,
+        authn_requests_signed: true,
         digest_method: XMLSecurity::Document::SHA256,
         signature_method: XMLSecurity::Document::RSA_SHA256
       )
@@ -314,6 +321,14 @@ module OmniAuth
 
     private
 
+      def certificate
+        File.read(options.certificate_file) if options.certificate_file
+      end
+
+      def private_key
+        File.read(options.private_key_file) if options.private_key_file
+      end
+
       def idp_metadata_url
         case options.mode
         when :test
@@ -337,10 +352,17 @@ module OmniAuth
           sso_binding: ['urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect']
         )
 
+        # Local certificate and private key to decrypt the responses
+        settings[:certificate] = certificate
+        settings[:private_key] = private_key
+
         # Define the security settings as there are some defaults that need to be
         # modified
         security_defaults = OneLogin::RubySaml::Settings::DEFAULTS[:security]
-        settings[:security] = security_defaults.merge(options.security_settings)
+        settings[:security] = security_defaults.merge(
+          options.security_settings.to_h.transform_keys(&:to_sym)
+        )
+        settings[:security][:authn_requests_signed] = false unless certificate && private_key
 
         settings
       end
