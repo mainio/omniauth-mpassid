@@ -1,4 +1,4 @@
-name: "[CI] Omniauth MpassID"
+name: "[CI] Lint"
 on:
   push:
     branches:
@@ -6,6 +6,7 @@ on:
       - main
       - release/*
   pull_request:
+
 env:
   CI: "true"
   CODECOV: "true"
@@ -15,10 +16,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  main:
-    name: Tests
+  lint:
+    name: Lint code
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v3
         with:
@@ -26,6 +27,5 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-      - name: RSpec
-        run: bundle exec rspec
-      - uses: codecov/codecov-action@v3
+      - name: Run Rubocop
+        run: bundle exec rubocop -P
