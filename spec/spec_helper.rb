@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'simplecov'
 require 'omniauth-mpassid'
 require 'omniauth-mpassid/test'
 require 'webmock/rspec'
