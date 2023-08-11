@@ -1,11 +1,5 @@
 # frozen_string_literal: true
 
-require 'simplecov' if ENV['SIMPLECOV'] || ENV['CODECOV']
-if ENV['CODECOV']
-  require 'codecov'
-  SimpleCov.formatter = SimpleCov::Formatter::Codecov
-end
-
 require 'omniauth-mpassid'
 require 'omniauth-mpassid/test'
 require 'webmock/rspec'
