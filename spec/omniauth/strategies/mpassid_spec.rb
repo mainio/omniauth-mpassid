@@ -303,7 +303,7 @@ describe OmniAuth::Strategies::MPASSid, type: :strategy do
 
       before :each do
         allow(Time).to receive(:now).and_return(
-          Time.utc(2022, 1, 9, 10, 49, 0)
+          Time.utc(2024, 1, 17, 9, 48, 35)
         )
 
         raw_xml_file = support_filepath("#{xml}.xml")
@@ -368,47 +368,42 @@ describe OmniAuth::Strategies::MPASSid, type: :strategy do
 
       it 'should set the info hash correctly' do
         expect(auth_hash['info'].to_hash).to eq(
-          'first_name' => 'Testi1',
+          'first_name' => 'Kutsumanimi1',
           'last_name' => 'Oppilas1',
-          'location' => 'Demolan koulut Oy',
-          'name' => 'Testi1 Oppilas1'
+          'location' => 'Mansikkalan testi kunta',
+          'name' => 'Kutsumanimi1 Oppilas1'
         )
       end
 
       it 'should set the raw info to all attributes' do
         expect(auth_hash['extra']['raw_info'].all.to_hash).to eq(
-          'urn:mpass.id:educationProvider' => ['Demolan koulut Oy'],
-          'urn:mpass.id:educationProviderId' => ['1.2.246.562.10.12345678907'],
-          'urn:mpass.id:educationProviderInfo' => ['1.2.246.562.10.12345678907;Demolan koulut Oy'],
-          'urn:mpass.id:uid' => ['MPASSOID.c6329e82913e265b3a79c11a043fdab8b06b1a9e'],
-          'urn:mpass.id:role' => ['1.2.246.562.10.12345678907;99900;7B;Oppilas'],
-          'urn:mpass.id:role_v1.1' => ['Demola;99900;7B;Oppilas'],
-          'urn:mpass.id:school' => ['Demolan koulu'],
-          'urn:mpass.id:schoolCode' => ['99900'],
-          'urn:mpass.id:schoolInfo' => ['99900;Demolan koulu'],
-          'urn:mpass.id:class' => ['7B'],
-          'urn:mpass.id:classLevel' => ['7'],
-          'urn:oid:1.3.6.1.4.1.16161.1.1.27' => ['1.2.246.562.24.10000000016'],
           'urn:oid:2.5.4.4' => ['Oppilas1'],
           'urn:oid:2.5.4.42' => ['Testi1'],
+          'urn:mpass.id:nickname' => ['Kutsumanimi1'],
+          'urn:mpass.id:uid' => ['MPASSOID.391ea8eb34f1e27024ab1342603537bdbd494900'],
+          'urn:mpass.id:schoolInfo' => ['30076;Mansikkalan testi peruskoulu', '1.2.246.562.99.00000000002;Mansikkalan testi peruskoulu'],
+          'urn:mpass.id:classLevel' => ['9'],
+          'urn:mpass.id:learningMaterialsCharge' => ['1;30076', '1;1.2.246.562.99.00000000002'],
+          'urn:mpass.id:role' => ['1.2.246.562.99.00000000001;30076;9F;Oppilas;1;1.2.246.562.99.00000000002;'],
+          'urn:oid:1.3.6.1.4.1.16161.1.1.27' => ['1.2.246.562.24.20000000018'],
+          'urn:mpass.id:educationProviderInfo' => ['1.2.246.562.99.00000000001;Mansikkalan testi kunta'],
+          'urn:mpass.id:originalIssuer' => ['1.2.246.562.99.00000000001'],
           'fingerprint' => '1B:0A:82:7D:3D:76:7B:49:66:06:52:03:0A:10:69:A6:9B:07:48:A8'
         )
       end
 
       it 'should set the saml attributes to the extra hash' do
         expect(auth_hash['extra']['saml_attributes'].to_hash).to eq(
-          'funet_person_learner_id' => '1.2.246.562.24.10000000016',
           'given_name' => 'Testi1',
-          'first_names' => 'Testi1',
+          'first_name' => 'Kutsumanimi1',
           'last_name' => 'Oppilas1',
-          'school_code' => ['99900'],
-          'school_name' => ['Demolan koulu'],
-          'class' => ['7B'],
-          'class_level' => ['7'],
-          'provider_id' => ['1.2.246.562.10.12345678907'],
-          'provider_name' => ['Demolan koulut Oy'],
-          'role' => ['1.2.246.562.10.12345678907;99900;7B;Oppilas'],
-          'role_name' => nil
+          'provider_info' => ['1.2.246.562.99.00000000001;Mansikkalan testi kunta'],
+          'school_info' => ['30076;Mansikkalan testi peruskoulu', '1.2.246.562.99.00000000002;Mansikkalan testi peruskoulu'],
+          'class_level' => '9',
+          'learning_materials_charge' => ['1;30076', '1;1.2.246.562.99.00000000002'],
+          'role' => ['1.2.246.562.99.00000000001;30076;9F;Oppilas;1;1.2.246.562.99.00000000002;'],
+          'learner_id' => '1.2.246.562.24.20000000018',
+          'original_issuer' => '1.2.246.562.99.00000000001'
         )
       end
 
@@ -428,7 +423,7 @@ describe OmniAuth::Strategies::MPASSid, type: :strategy do
       end
 
       it 'should set the uid from the correct SAML attribute' do
-        expect(auth_hash['uid']).to eq('MPASSOID.c6329e82913e265b3a79c11a043fdab8b06b1a9e')
+        expect(auth_hash['uid']).to eq('MPASSOID.391ea8eb34f1e27024ab1342603537bdbd494900')
       end
     end
   end
@@ -456,22 +451,17 @@ describe OmniAuth::Strategies::MPASSid, type: :strategy do
     it 'should add the correct request attributes' do
       expect(request_attributes).to match_array(
         [
-          {friendly_name: 'mpassUsername', name: 'urn:mpass.id:uid'},
-          {friendly_name: 'learnerId', name: 'urn:oid:1.3.6.1.4.1.16161.1.1.27'},
-          {friendly_name: 'givenName', name: 'urn:oid:2.5.4.42'},
-          {friendly_name: 'firstName', name: 'http://eidas.europa.eu/attributes/naturalperson/CurrentGivenName'},
           {friendly_name: 'sn', name: 'urn:oid:2.5.4.4'},
-          {friendly_name: 'mpassSchoolCode', name: 'urn:mpass.id:schoolCode'},
-          {friendly_name: 'school', name: 'urn:mpass.id:school'},
+          {friendly_name: 'givenName', name: 'urn:oid:2.5.4.42'},
+          {friendly_name: 'nickname', name: 'urn:mpass.id:nickname'},
+          {friendly_name: 'mpassUsername', name: 'urn:mpass.id:uid'},
           {friendly_name: 'mpassSchoolInfo', name: 'urn:mpass.id:schoolInfo'},
-          {friendly_name: 'mpassClass', name: 'urn:mpass.id:class'},
-          {friendly_name: 'ecaGroup', name: 'urn:educloudalliance.org:group'},
           {friendly_name: 'mpassClassLevel', name: 'urn:mpass.id:classLevel'},
-          {friendly_name: 'ecaRole', name: 'urn:educloudalliance.org:role'},
+          {friendly_name: 'mpassLearningMaterialsCharge', name: 'urn:mpass.id:learningMaterialsCharge'},
           {friendly_name: 'mpassRole', name: 'urn:mpass.id:role'},
-          {friendly_name: 'mpassEducationProviderOid', name: 'urn:mpass.id:educationProviderId'},
-          {friendly_name: 'mpassEducationProviderName', name: 'urn:mpass.id:educationProvider'},
-          {friendly_name: 'mpassEducationProviderInfo', name: 'urn:mpass.id:educationProviderInfo'}
+          {friendly_name: 'learnerId', name: 'urn:oid:1.3.6.1.4.1.16161.1.1.27'},
+          {friendly_name: 'mpassEducationProviderInfo', name: 'urn:mpass.id:educationProviderInfo'},
+          {friendly_name: 'originalIssuer', name: 'urn:mpass.id:originalIssuer'}
         ]
       )
     end

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    omniauth-mpassid (0.5.1)
+    omniauth-mpassid (0.6.0)
       omniauth-saml (~> 2.0)
 
 GEM
@@ -123,4 +123,4 @@ DEPENDENCIES
   xmlenc (~> 0.7.1)
 
 BUNDLED WITH
-   1.17.2
+   2.4.12

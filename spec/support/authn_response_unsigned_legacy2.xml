@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<saml2p:Response Destination="https://www.service.fi/auth/mpassid/callback"
+    ID="_b208e73a7aa67df76b92fe26236ddd4d" InResponseTo="_3337d9b1-c103-44d7-ba90-65e3b974c1e4"
+    IssueInstant="2022-01-09T10:48:58.911Z" Version="2.0"
+    xmlns:saml2p="urn:oasis:names:tc:SAML:2.0:protocol">
+    <saml2:Issuer xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion">https://mpass-proxy-test.csc.fi/idp/shibboleth</saml2:Issuer>
+    <saml2p:Status><saml2p:StatusCode Value="urn:oasis:names:tc:SAML:2.0:status:Success"/></saml2p:Status>
+    <saml2:Assertion ID="_43aca21dc5e93a895609ab88d268ab31" IssueInstant="2022-01-09T10:48:58.911Z"
+        Version="2.0" xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion">
+        <saml2:Issuer>https://mpass-proxy-test.csc.fi/idp/shibboleth</saml2:Issuer>
+        <saml2:Subject>
+            <saml2:NameID Format="urn:oasis:names:tc:SAML:2.0:nameid-format:transient"
+                NameQualifier="https://mpass-proxy-test.csc.fi/idp/shibboleth"
+                SPNameQualifier="https://www.service.fi/auth/mpassid/metadata">AAdzZWNyZXQxQZXS2hvZxciWEpdBx5Fb8eExRuUZOUNsr70mbWetfeXOBh39Ewz6YrWYuC18323jEzcuwjEy2ksiiKco/a7L/oeKwJd2VMt8d7WlWapn0P0pvZPdVvCT/TVT/pSBPtR2sJHxeYxbhzog17Wro2PjVhflw4Rvs6UWtQ==</saml2:NameID>
+            <saml2:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer"><saml2:SubjectConfirmationData Address="84.250.236.50"
+                InResponseTo="_3337d9b1-c103-44d7-ba90-65e3b974c1e4" NotOnOrAfter="2022-01-09T10:53:58.915Z"
+                Recipient="https://www.service.fi/auth/mpassid/callback"/></saml2:SubjectConfirmation>
+        </saml2:Subject>
+        <saml2:Conditions NotBefore="2022-01-09T10:48:58.911Z" NotOnOrAfter="2022-01-09T10:53:58.911Z">
+            <saml2:AudienceRestriction>
+                <saml2:Audience>https://www.service.fi/auth/mpassid/metadata</saml2:Audience>
+            </saml2:AudienceRestriction>
+        </saml2:Conditions>
+        <saml2:AuthnStatement AuthnInstant="2022-01-09T10:48:58.824Z"
+            SessionIndex="_948b19f5be93b6f07934922411cfa001"><saml2:SubjectLocality Address="84.250.236.50"/>
+            <saml2:AuthnContext>
+                <saml2:AuthnContextClassRef>urn:mpass.id:authnsource:ShibLdap</saml2:AuthnContextClassRef>
+            </saml2:AuthnContext>
+        </saml2:AuthnStatement>
+        <saml2:AttributeStatement>
+            <saml2:Attribute FriendlyName="sn" Name="urn:oid:2.5.4.4"
+                NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+                <saml2:AttributeValue>Oppilas1</saml2:AttributeValue>
+            </saml2:Attribute>
+            <saml2:Attribute FriendlyName="mpassClassLevel" Name="urn:mpass.id:classLevel"
+                NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+                <saml2:AttributeValue>7</saml2:AttributeValue>
+            </saml2:Attribute>
+            <saml2:Attribute FriendlyName="mpassSchoolInfo" Name="urn:mpass.id:schoolInfo"
+                NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+                <saml2:AttributeValue>99900;Demolan koulu</saml2:AttributeValue>
+            </saml2:Attribute>
+            <saml2:Attribute FriendlyName="learnerId" Name="urn:oid:1.3.6.1.4.1.16161.1.1.27"
+                NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+                <saml2:AttributeValue>1.2.246.562.24.10000000016</saml2:AttributeValue>
+            </saml2:Attribute>
+            <saml2:Attribute FriendlyName="mpassSchoolCode" Name="urn:mpass.id:schoolCode"
+                NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+                <saml2:AttributeValue>99900</saml2:AttributeValue>
+            </saml2:Attribute>
+            <saml2:Attribute FriendlyName="mpassEducationProviderOid" Name="urn:mpass.id:educationProviderId"
+                NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+                <saml2:AttributeValue>1.2.246.562.10.12345678907</saml2:AttributeValue>
+            </saml2:Attribute>
+            <saml2:Attribute FriendlyName="mpassSchool" Name="urn:mpass.id:school"
+                NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+                <saml2:AttributeValue>Demolan koulu</saml2:AttributeValue>
+            </saml2:Attribute>
+            <saml2:Attribute FriendlyName="mpassEducationProviderName" Name="urn:mpass.id:educationProvider"
+                NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+                <saml2:AttributeValue>Demolan koulut Oy</saml2:AttributeValue>
+            </saml2:Attribute>
+            <saml2:Attribute FriendlyName="mpassClass" Name="urn:mpass.id:class"
+                NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+                <saml2:AttributeValue>7B</saml2:AttributeValue>
+            </saml2:Attribute>
+            <saml2:Attribute FriendlyName="mpassEducationProviderInfo" Name="urn:mpass.id:educationProviderInfo"
+                NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+                <saml2:AttributeValue>1.2.246.562.10.12345678907;Demolan koulut Oy</saml2:AttributeValue>
+            </saml2:Attribute>
+            <saml2:Attribute FriendlyName="mpassRole" Name="urn:mpass.id:role"
+                NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+                <saml2:AttributeValue>1.2.246.562.10.12345678907;99900;7B;Oppilas</saml2:AttributeValue>
+            </saml2:Attribute>
+            <saml2:Attribute FriendlyName="givenName" Name="urn:oid:2.5.4.42"
+                NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+                <saml2:AttributeValue>Testi1</saml2:AttributeValue>
+            </saml2:Attribute>
+            <saml2:Attribute FriendlyName="mpassRoleV11" Name="urn:mpass.id:role_v1.1"
+                NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+                <saml2:AttributeValue>Demola;99900;7B;Oppilas</saml2:AttributeValue>
+            </saml2:Attribute>
+            <saml2:Attribute FriendlyName="mpassUsername" Name="urn:mpass.id:uid"
+                NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+                <saml2:AttributeValue>MPASSOID.c6329e82913e265b3a79c11a043fdab8b06b1a9e</saml2:AttributeValue>
+            </saml2:Attribute>
+        </saml2:AttributeStatement>
+    </saml2:Assertion>
+</saml2p:Response>

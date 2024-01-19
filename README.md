@@ -109,12 +109,11 @@ The user's personal information transmitted from MPASSid can be found under
 the `:saml_attributes` key in the OmniAuth extra hash described above.
 
 This attributes hash will contain the keys described in this following
-sub-sections. The keys marked as `(undocumented)` are not described in the
-MPASSid's own documentation but are available at least in some SAML responses.
+sub-sections.
 
 See also the MPASSid data models documentation for more information:
 
-https://wiki.eduuni.fi/display/CSCMPASSID/Data+models
+https://wiki.eduuni.fi/display/OPHPALV/MPASSid%3An+tietomalli
 
 The attributes can be either single or multi type defining whether they can
 have a single or multiple values. The single type values are strings and multi
@@ -128,15 +127,15 @@ is `nil` for both types.
 - SAML FriendlyName: givenName
 - Type: Single (`String`)
 
-The first/given name of the user.
+The given name of the user.
 
-#### `:first_names`
+#### `:first_name`
 
-- SAML URI: http://eidas.europa.eu/attributes/naturalperson/CurrentGivenName
-- SAML FriendlyName: firstName
+- SAML URI: urn:mpass.id:nickname
+- SAML FriendlyName: nickname
 - Type: Single (`String`)
 
-All the first/given names of the user.
+The first name / calling name / nickname of the user.
 
 #### `:last_name`
 
@@ -146,39 +145,45 @@ All the first/given names of the user.
 
 The last/family name of the user.
 
-#### `:municipality_code`
+#### `:provider_info`
 
-- SAML URI: urn:mpass.id:municipalityCode
-- SAML FriendlyName: municipalityCode
-- Type: Multi (`Array`)
+- SAML URI: urn:mpass.id:educationProviderInfo
+- SAML FriendlyName: mpassEducationProviderInfo
+- Type: Multi (`Array<String>`)
 
-The municipality codes of the authenticated user.
+Information about the educational provider, each value contains multiple fields
+separated with a semicolon (`;`) character.
 
-See:
+For instance `1.2.246.562.10.494695390410;Virallinen nimi`.
 
-http://tilastokeskus.fi/meta/luokitukset/kunta/001-2017/index.html
+The description of the fields:
 
-#### `:municipality_name`
+1. The educational provider's OID as specified at the link below (`KOULUTUSTOIMIJA`)
+2. The educational provider's name as specified at the link below
 
-- SAML URI: one of the following (first found attribute)
-  * urn:mpass.id:municipality
-  * urn:educloudalliance.org:municipality
-- SAML FriendlyName: one of the following (first found attribute)
-  * N/A
-  * ecaMunicipality
-- Type: Multi (`Array`)
+The OIDs and information for these OIDs can be found from:
 
-The human-readable names of the municipalities of the authenticated user.
+https://virkailija.opintopolku.fi/organisaatio-service/swagger-ui/index.html
 
-#### `:school_code`
+#### `:school_info`
 
-- SAML URI: urn:mpass.id:municipalityCode
-- SAML FriendlyName: N/A
-- Type: Multi (`Array`)
+- SAML URI: urn:mpass.id:schoolInfo
+- SAML FriendlyName: mpassSchoolInfo
+- Type: Multi (`Array<String>`)
 
-The school codes of the authenticated user.
+Information about the school, each value contains multiple fields separated with
+a semicolon (`;`) character.
 
-See (JSON format):
+The values are provided in both of the following formats as separate values:
+
+- `30076;Mansikkalan testi peruskoulu`
+- `1.2.246.562.99.00000000002;Mansikkalan testi peruskoulu`
+
+##### First format
+
+The first value format specifies the national educational institution code as
+the first column separated with a semicolon (`;`) as specified at the national
+educational institution registry.
 
 For the list of codes, see:
 
@@ -189,37 +194,57 @@ An example for a single school code (04647), JSON format:
 
 https://virkailija.opintopolku.fi/koodisto-service/rest/codeelement/oppilaitosnumero_04647
 
-#### `:school_name`
+##### Second format
 
-- SAML URI: urn:mpass.id:school
-- SAML FriendlyName: school
-- Type: Multi (`Array`)
+The second value format specifies the OID of the educational institution as
+the first column separated with a semicolon (`;`). These values are specified
+at (filter with `OPPILAITOS`):
 
-The human-readable names of the schools of the authenticated user.
-
-#### `:class`
-
-- SAML URI: one of the following (first found attribute)
-  * urn:mpass.id:class
-  * urn:educloudalliance.org:group
-- SAML FriendlyName: one of the following (first found attribute)
-  * N/A
-  * ecaGroup
-- Type: Multi (`Array`)
-
-The class/group-information of the authenticated user.
-
-For instance: 8A or 3B.
+https://virkailija.opintopolku.fi/organisaatio-service/swagger-ui/index.html
 
 #### `:class_level`
 
 - SAML URI: urn:mpass.id:classLevel
 - SAML FriendlyName: N/A
-- Type: Multi (`Array`)
+- Type: Single (`String`)
 
-The class/level-information of the authenticated user.
+The class level information (0-10) of the authenticated user.
 
 For instance 8 or 3.
+
+For further information, see:
+
+https://www.stat.fi/meta/kas/vuosiluokka.html
+
+This information is available for pre-primary education and comprehensive
+education students.
+
+This information is not available for secondary level students (upper secondary
+education or vocational education).
+
+#### `:learning_materials_charge`
+
+- SAML URI: urn:mpass.id:classLevel
+- SAML FriendlyName: N/A
+- Type: Multi (`Array<String>`)
+
+Specifies for secondary level education pupils whether their learning materials
+are paid or not, each value contains multiple fields separated with a semicolon
+(`;`) character.
+
+The values are provided in both of the following formats as separate values:
+
+- `0;00000`
+- `0;1.2.246.562.99.00000000003`
+
+Similarly to the `:school_info` field, the values are provided with the national
+educational institution code as well as the educational institution's OID.
+
+The first column specifies the value for the field which is explained as
+follows:
+
+- `0` = Learning material is free for the pupil
+- `1` = Learning material is paid for the pupil
 
 #### `:role`
 
@@ -229,32 +254,33 @@ For instance 8 or 3.
 - SAML FriendlyName: one of the following (first found attribute)
   * N/A
   * ecaStructuredRole
-- Type: Multi (`Array`)
+- Type: Multi (`Array<String>`)
 
 The roles of the user in four parts, divided with a semicolon (;) character.
 First municipality, followed by school code, group and role in the group.
 
-For instance Helsinki;32132;9A;Oppilas.
+For instance `1.2.246.562.99.00000000001;00000;1A;Oppilas;1;1.2.246.562.99.00000000003;`.
 
-#### `:role_name` (undocumented)
+Each value consists of the following fields:
 
-- SAML URI: urn:educloudalliance.org:role
-- SAML FriendlyName: ecaRole
-- Type: Multi (`Array`)
+1. Educational provider OID (e.g. `1.2.246.562.99.00000000001`)
+2. National educational institution code (e.g. `00000`)
+3. Class or group information of the pupil (e.g. `1A`)
+4. Role of the user (e.g. `Oppilas`)
+5. Role code of the user (e.g. `1`)
+6. Educational institution OID (e.g. `1.2.246.562.99.00000000003`)
+7. The office / branch OID (similar format as other OIDs, can be also empty)
 
-NOTE: This attribute is undocumented by MPASSid.
+The OIDs for the educational provider (`KOULUTUSTOIMIJA`), educational
+institution (`OPPILAITOS`) and office / branch (`TOIMIPISTE`) can be found from:
 
-The human readable names of the role (in Finnish).
+https://virkailija.opintopolku.fi/organisaatio-service/swagger-ui/index.html
 
-For instance Oppilas.
-
-#### `:funet_person_learner_id` (undocumented)
+#### `:learner_id`
 
 - SAML URI: urn:oid:1.3.6.1.4.1.16161.1.1.27
-- SAML FriendlyName: N/A
+- SAML FriendlyName: learnerId
 - Type: Single (`String`)
-
-NOTE: This attribute is undocumented by MPASSid.
 
 11-digit identifier, which may be used to identify a person while storing,
 managing or transferring personal data.
@@ -262,6 +288,14 @@ managing or transferring personal data.
 See:
 
 https://wiki.eduuni.fi/display/CSCHAKA/funetEduPersonSchema2dot2#funetEduPersonSchema2dot2-funetEduPersonLearnerId
+
+#### `:original_issuer`
+
+Information about the user's home organization that is relying the information
+to MPASSid. This information is added by the Finnish National Agency for
+Education.
+
+For instance `1.2.246.562.99.00000000001`.
 
 ## License
 
