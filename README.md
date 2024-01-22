@@ -84,6 +84,13 @@ Devise.setup do |config|
 end
 ```
 
+## Testing
+
+Once the gem is installed and configured properly, it can be tested with the
+test accounts available at:
+
+https://wiki.eduuni.fi/display/OPHPALV/Test+accounts+available+for+testing
+
 ## Identification Responses
 
 The user's data is transmitted from MPASSid in the SAML authentication
