@@ -27,4 +27,4 @@ jobs:
           bundler-cache: true
       - name: RSpec
         run: bundle exec rspec
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v5
